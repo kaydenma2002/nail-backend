@@ -1,9 +1,12 @@
-from fastapi import FastAPI
-from config.db import connect,initialize_db
+from fastapi import Depends, FastAPI
+import models
+from db import engine, Base
+from routers import user,nail  # Import your user router
+
 
 app = FastAPI()
-conn = connect()
-cursor = conn.cursor()
-@app.on_event("startup")
-async def startup_event():
-    initialize_db()
+Base.metadata.create_all(bind=engine)
+
+app.include_router(user.router)
+app.include_router(nail.router)
+    

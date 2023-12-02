@@ -19,3 +19,5 @@ class Nail(Base):
     content = Column(String(100))
     address = Column(String(100))
     user_id = Column(Integer)
+    
+

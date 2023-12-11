@@ -6,6 +6,7 @@ class UserBase(BaseModel):
     first_name: str | None = None
     email: str
     password: str
+    
 class LoginData(BaseModel):
     email: str
     password: str

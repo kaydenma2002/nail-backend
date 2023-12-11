@@ -15,9 +15,15 @@ class User(Base):
 class Nail(Base):
     __tablename__ = 'nails'
     id = Column(Integer, primary_key=True, index=True)
-    title= Column(String(50))
-    content = Column(String(100))
-    address = Column(String(100))
-    user_id = Column(Integer)
+    name= Column(String(50))
+    
+    full_address = Column(String(100))
+    street_address = Column(String(100))
+    city = Column(String(100))
+    state = Column(String(100))
+    postal_code = Column(String(100))
+    phone = Column(String(100))
+    categories = Column(String(100))
+    
     
 

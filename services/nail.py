@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+
 from models import Nail
 from models import User
 from schemas.nail import NailBase
@@ -32,7 +34,9 @@ class NailService:
             # Use paginate to retrieve a specific page of results
             query = self.db.query(Nail).offset(offset).limit(page_size)
             nails = query.all()
-            return nails
+            total_count = self.db.query(func.count(Nail.id)).scalar()
+
+            return {"nails": nails, "total_count": total_count}
         except Exception as e:
             
             return None

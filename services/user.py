@@ -53,7 +53,7 @@ class UserService:
         }
             return  {"access_token": access_token, "token_type": "bearer","user":user}
         else:
-            return False
+            raise HTTPException(status_code=400, detail="username or password not match. Please try again.")
     def get_user_from_token(self, token: str = Depends(oauth2_scheme)):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -6,4 +6,4 @@ class NailBase(BaseModel):
     content: str
     user_id: int
     address: str
-    user_id: int
+    

@@ -38,6 +38,6 @@ class NailService:
 
             return {"nails": nails, "total_count": total_count}
         except Exception as e:
-            
-            return None
+            print(e)
+            return e
     

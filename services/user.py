@@ -5,6 +5,7 @@ from typing import Annotated
 from datetime import datetime, timedelta
 from typing import Union, Any
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+import httpx
 
 from fastapi import Depends, FastAPI, HTTPException, status
 import bcrypt
@@ -73,6 +74,54 @@ class UserService:
             raise credentials_exception
 
         return user
+    
+    async def connect_to_dropbox(self, access_token: str, file_path: str):
+        # Make Dropbox API requests using the provided access token
+        headers = {"Authorization": f"Bearer {access_token}"}
+        
+        # Check if the file exists
+        # file_exists = await self.check_dropbox_file_existence(access_token, file_path)
+        # if not file_exists:
+        #     raise HTTPException(status_code=404, detail=f"File not found at path: {file_path}")
+
+        # Continue with connecting to Dropbox and other operations if needed
+
+        async with httpx.AsyncClient() as client:
+            # Example Dropbox API request to get user account information
+            response = await client.post("https://api.dropboxapi.com/2/file_requests/list_v2", headers=headers)
+
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail="Dropbox API request failed")
+
+        user_info = response.json()
+
+        # Example: Now, let's download the file after successfully connecting
+        # file_content = await self.download_dropbox_file(access_token, file_path)
+
+        return {"message": "Connected to Dropbox", "user_info": user_info}
+
+    async def check_dropbox_file_existence(self, access_token: str, file_path: str):
+        headers = {"Authorization": f"Bearer {access_token}"}
+        params = {"path": file_path}
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post("https://api.dropboxapi.com/2/files/get_metadata", headers=headers, params=params)
+
+        return response.status_code == 200
+
+    async def download_dropbox_file(self, access_token: str, file_path: str):
+        # Make Dropbox API requests to download the file
+        headers = {"Authorization": f"Bearer {access_token}"}
+        params = {"path": file_path}
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post("https://content.dropboxapi.com/2/files/download", headers=headers, params=params)
+
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail="Dropbox API request failed")
+
+        file_content = response.content
+        return file_content
     
 
     

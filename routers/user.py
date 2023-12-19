@@ -25,3 +25,8 @@ async def get_current_user(db: Session = Depends(get_db),token:str = Depends(oau
 async def protected_route(current_user: UserBase = Depends(get_current_user)):
     return {"message": "This is a protected route", "user": current_user}
     
+@router.get("/connect-to-dropbox")
+async def connect_to_dropbox(db: Session = Depends(get_db), access_token: str = None):
+    user_service = UserService(db)
+    result = await user_service.connect_to_dropbox(access_token,"KAYDEN/nail/1/1.jpg")
+    return result
